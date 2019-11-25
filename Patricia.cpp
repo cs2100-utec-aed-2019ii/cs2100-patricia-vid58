@@ -1,14 +1,13 @@
+
 #include <iostream>
 #include <map>
-#include <string>
 using namespace std;
 
 struct Trie {
 
-    map<char, Trie*> children;
-
-    map<string, Trie*> children2;
+    map<string, Trie*> children;
     bool is_node;
+
 };
 
 Trie* getNewTrieNode()
@@ -19,52 +18,61 @@ Trie* getNewTrieNode()
 
 }
 
-void insert(Trie*& root, const string& str) //&
+void insert(Trie*& root, const string str)
 {
     if (root == nullptr) {
         root = getNewTrieNode();
     }
     Trie* temp = root;
+    string x;
     for (int i = 0; i < str.length(); i++) {
-        char x = str[i];
+        x = str[i];
 
-        if (temp->children.find(x) == temp->children.end()) {
+        if (temp->children.find(x) == temp->children.end())
             temp->children[x] = getNewTrieNode();
-        }
+
         temp = temp->children[x];
     }
 
     temp->is_node = true;
 }
-///////////////////////////////////////////////////////
+
 void convertToPatricia(Trie* root, const string& str){
 
     char aux[str.length()];
+
     string aux2;
+    string aux3;
 
     Trie* temp=root;
 
     for(int i=0;i<str.length();i++){
         aux[i]=str[i+1];
     }
-
     for(int i=0;i<str.length();i++){
-        aux2[i]=aux[0];
+        aux2[i]=aux[i];
     }
+    aux3=str[0];
 
+    temp->children[aux3]=getNewTrieNode();
+    temp=temp->children[aux3];
+    temp->children[aux2]=getNewTrieNode();
 
-
+    temp->is_node = true;
 }
-//////////////////////////////////////////////////
-bool search(Trie* root, const string& str)//&
+
+bool search(Trie* root, const string& str)
 {
     if (root == nullptr)
         return false;
 
     Trie* temp = root;
-    for (int i = 0; i < str.length(); i++) {
+    string n;
 
-        temp = temp->children[str[i]];
+    for (int i = 0; i < str.length(); i++) {
+        n=str[i];
+
+        temp = temp->children[n];
 
         if (temp == nullptr)
             return false;
@@ -73,11 +81,12 @@ bool search(Trie* root, const string& str)//&
     return temp->is_node;
 }
 
-void eliminar(Trie* root, const string& str){//&
+void eliminar(Trie* root, const string& str){
     Trie* temp = root;
-
+    string x;
     for (int i = 0; i < str.length(); i++) {
-        char x = str[i];
+
+        x = str[i];
 
         if (temp->children.find(x) == temp->children.end())
             return;
@@ -91,12 +100,10 @@ void eliminar(Trie* root, const string& str){//&
 void imprimir(Trie* root, const string str)
 {
     Trie* temp=root;
-    if(temp->is_node) {
-        cout << str << endl;
-    }
-    for(auto &i:temp->children) {
-        imprimir(i.second, str + i.first);
-    }
+    if(temp->is_node)
+        cout << str<< endl;
+    for(auto &i:temp->children)
+        imprimir(i.second, str+i.first);
 }
 int main()
 {
